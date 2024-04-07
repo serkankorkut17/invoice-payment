@@ -1,30 +1,40 @@
 import * as React from 'react';
-import { BottomNavigation, Text } from 'react-native-paper';
+import { BottomNavigation, Text, useTheme } from 'react-native-paper';
 
+const BottomNav = ({ navigation }) => {
+  const HomeRoute = () => <Text> Home </Text>;
+  const HistoryRoute = () => <Text>History</Text>;
+  const RecentsRoute = () => <Text>Recents</Text>;
+  const AccountRoute = () => <Text>Account</Text>;
 
-const MusicRoute = () => <Text>Music</Text>;
+  // const HomeRoute = () => navigation.navigate('Home');
+  // const HistoryRoute = () => navigation.navigate('PaymentHistory');
+  // const RecentsRoute = () => navigation.navigate('Home');
+  // const AccountRoute = () => navigation.navigate('Admin');
 
-const AlbumsRoute = () => <Text>Albums</Text>;
-
-const RecentsRoute = () => <Text>Recents</Text>;
-
-const NotificationsRoute = () => <Text>Notifications</Text>;
-
-
-const BottomNav = () => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    { key: 'music', title: 'Favorites', focusedIcon: 'heart', unfocusedIcon: 'heart-outline'},
-    { key: 'albums', title: 'Albums', focusedIcon: 'album' },
+    {
+      key: 'home',
+      title: 'Home',
+      focusedIcon: 'home',
+      unfocusedIcon: 'home-outline',
+    },
+    { key: 'history', title: 'History', focusedIcon: 'album' },
     { key: 'recents', title: 'Recents', focusedIcon: 'history' },
-    { key: 'notifications', title: 'Notifications', focusedIcon: 'bell', unfocusedIcon: 'bell-outline' },
+    {
+      key: 'account',
+      title: 'Account',
+      focusedIcon: 'account',
+      unfocusedIcon: 'account-outline',
+    },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
-    music: MusicRoute,
-    albums: AlbumsRoute,
+    home: HomeRoute,
+    history: HistoryRoute,
     recents: RecentsRoute,
-    notifications: NotificationsRoute,
+    account: AccountRoute,
   });
 
   return (

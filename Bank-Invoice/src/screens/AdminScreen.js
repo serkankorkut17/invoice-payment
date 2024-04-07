@@ -6,20 +6,20 @@ import { Appbar } from 'react-native-paper';
 const TopBar = () => (
   <Appbar.Header>
       <Appbar.Action icon="account" onPress={() => {}} />
-      <Appbar.Content title="Invoice Manager" />
+      <Appbar.Content title="Admin Invoice Registration" />
       <Appbar.Action icon="magnify" onPress={() => {}} />
   </Appbar.Header>
 );
 
 
-const HomeScreen = ({ navigation}) => {
+const AdminScreen = ({navigation}) => {
   return (
     <>
       <TopBar />
-      <Text>Home Screen</Text>
+      <Text>Admin Screen</Text>
       <BottomNav navigation={navigation}/>
     </>
   );
 };
 
-export default HomeScreen;
+export default AdminScreen;
