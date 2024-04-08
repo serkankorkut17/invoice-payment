@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { BottomNavigation, Text, useTheme } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
-const BottomNav = ({ navigation }) => {
-  const HomeRoute = () => <Text> Home </Text>;
-  const HistoryRoute = () => <Text>History</Text>;
-  const RecentsRoute = () => <Text>Recents</Text>;
-  const AccountRoute = () => <Text>Account</Text>;
 
-  // const HomeRoute = () => navigation.navigate('Home');
-  // const HistoryRoute = () => navigation.navigate('PaymentHistory');
-  // const RecentsRoute = () => navigation.navigate('Home');
-  // const AccountRoute = () => navigation.navigate('Admin');
+const BottomNav = () => {
+  const navigation = useNavigation();
+  console.log(navigation.getState());
+  const HomeRoute = () => <></>;
+  const HistoryRoute = () => <></>;
+  const RecentsRoute = () => <></>;
+  const AccountRoute = () => <></>;
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -20,8 +19,18 @@ const BottomNav = ({ navigation }) => {
       focusedIcon: 'home',
       unfocusedIcon: 'home-outline',
     },
-    { key: 'history', title: 'History', focusedIcon: 'album' },
-    { key: 'recents', title: 'Recents', focusedIcon: 'history' },
+    {
+      key: 'history',
+      title: 'History',
+      focusedIcon: 'album',
+      unfocusedIcon: 'album',
+    },
+    {
+      key: 'recents',
+      title: 'Recents',
+      focusedIcon: 'history',
+      unfocusedIcon: 'history',
+    },
     {
       key: 'account',
       title: 'Account',
@@ -37,10 +46,22 @@ const BottomNav = ({ navigation }) => {
     account: AccountRoute,
   });
 
+  const handleIndexChange = (newIndex) => {
+    setIndex(newIndex);
+    // Navigate to the corresponding screen when a route is selected
+    if (newIndex === 0) {
+      navigation.navigate('Home');
+    } else if (newIndex === 1) {
+      navigation.navigate('PaymentHistory');
+    } else if (newIndex === 2) {
+      navigation.navigate('Admin');
+    }
+  };
+
   return (
     <BottomNavigation
       navigationState={{ index, routes }}
-      onIndexChange={setIndex}
+      onIndexChange={handleIndexChange}
       renderScene={renderScene}
     />
   );

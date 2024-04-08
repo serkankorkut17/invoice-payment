@@ -12,12 +12,12 @@ const TopBar = () => (
 );
 
 
-const HomeScreen = ({ navigation}) => {
+const HomeScreen = () => {
   return (
     <>
       <TopBar />
       <Text>Home Screen</Text>
-      <BottomNav navigation={navigation}/>
+      <BottomNav />
     </>
   );
 };

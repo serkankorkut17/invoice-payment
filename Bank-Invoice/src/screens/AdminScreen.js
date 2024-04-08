@@ -12,12 +12,12 @@ const TopBar = () => (
 );
 
 
-const AdminScreen = ({navigation}) => {
+const AdminScreen = () => {
   return (
     <>
       <TopBar />
       <Text>Admin Screen</Text>
-      <BottomNav navigation={navigation}/>
+      <BottomNav />
     </>
   );
 };

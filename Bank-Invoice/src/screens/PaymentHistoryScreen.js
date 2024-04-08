@@ -12,12 +12,12 @@ const TopBar = () => (
 );
 
 
-const PaymentHistoryScreen = ({navigation}) => {
+const PaymentHistoryScreen = () => {
   return (
     <>
       <TopBar />
       <Text>Payment History Screen</Text>
-      <BottomNav navigation={navigation} />
+      <BottomNav />
     </>
   );
 };
