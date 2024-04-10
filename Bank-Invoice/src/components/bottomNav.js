@@ -6,10 +6,12 @@ import { useNavigation } from '@react-navigation/native';
 const BottomNav = () => {
   const navigation = useNavigation();
   console.log(navigation.getState());
-  const HomeRoute = () => <></>;
-  const HistoryRoute = () => <></>;
-  const RecentsRoute = () => <></>;
-  const AccountRoute = () => <></>;
+
+  // Define the routes for the bottom navigation
+  const HomeRoute = () => <Text>Home</Text>;
+  const HistoryRoute = () => <Text>History</Text>;
+  const RecentsRoute = () => <Text>Recents</Text>;
+  const AccountRoute = () => <Text>Account</Text>;
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -44,6 +46,7 @@ const BottomNav = () => {
     history: HistoryRoute,
     recents: RecentsRoute,
     account: AccountRoute,
+
   });
 
   const handleIndexChange = (newIndex) => {
