@@ -2,9 +2,12 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+  autopay_id: {
+    type: Number,
+    required: true,
+  },
   user_id: {
-    type: SchemaType.types.ObjectId,
-    ref: 'User',
+    type: String,
     required: true,
   },
   bill_type: {
@@ -24,3 +27,5 @@ const userSchema = new Schema({
     required: true,
   },
 });
+
+export default mongoose.models.AutomaticPayment || mongoose.model('AutomaticPayment', userSchema);

@@ -2,9 +2,12 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+    invoice_id: {
+        type: Number,
+        required: true,
+    },
     user_id: {
-        type: SchemaType.types.ObjectId,
-        ref: 'User',
+        type: String,
         required: true,
     },
     bill_type: {
