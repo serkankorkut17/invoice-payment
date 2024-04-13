@@ -2,10 +2,11 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    invoice_id: {
-        type: Number,
-        required: true,
-    },
+    // invoice_id: {
+    //     type: Number,
+    //     required: true,
+    //     unique: true,
+    // },
     user_id: {
         type: String,
         required: true,
