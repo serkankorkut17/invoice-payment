@@ -1,26 +1,31 @@
-import { useRouter } from 'next/router';
 import { useContext, createContext, useState, useEffect } from 'react';
+
 
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const router = useRouter();
+  const [activeUser, setActiveUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = window.localStorage.getItem('user');
+    console.log('active useff context', storedUser);
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      setActiveUser(JSON.parse(storedUser));
     }
   }, []);
 
   const login = userData => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
+    setActiveUser(userData);
+    window.localStorage.setItem('user', JSON.stringify(userData))
   };
 
+  // useEffect(() => {
+  //   window.localStorage.setItem('user', JSON.stringify(activeUser));
+  //   console.log('active login context', activeUser);
+  // }, [activeUser]);
+
   return (
-    <UserContext.Provider value={{ user, login }}>
+    <UserContext.Provider value={{ activeUser, login }}>
       {children}
     </UserContext.Provider>
   );

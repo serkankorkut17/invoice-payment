@@ -2,10 +2,11 @@ import Layout from "@/components/Layout";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Modal from "@/components/Modal";
-import { set } from "mongoose";
+import { useUserContext } from "@/context/User";
 
 export default function Home(props) {
   const [users, setUsers] = useState([]);
+  //const { activeUser, login } = useUserContext();
   const [openModal, setOpenModal] = useState(false);
   const [form, setForm] = useState({
     amount: "",
@@ -13,21 +14,25 @@ export default function Home(props) {
     invoiceType: "",
     recipient: "",
   });
-  // const users = [
-  //   { user_id: "serkan" },
-  //   { user_id: "mehmet" },
-  //   { user_id: "ali" },
-  //   { user_id: "veli" },
-  // ];
+
+  //console.log("active index", activeUser);
+  
   useEffect(() => {
     fetch("http://localhost:3000/api/users")
       .then((data) => data.json())
       .then((data) => {
         //console.log(data);
         setUsers(data.users);
-        setForm({ ...form, recipient: users.user_id });
+        setForm({ ...form, recipient: data.users[0].user_id });
       });
   }, []);
+
+  // const compareUsers = (user) => {
+  //   if (user.user_id === activeUser) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   const handleFormFieldChange = (fieldName, e) => {
     setForm({ ...form, [fieldName]: e.target.value });
@@ -55,7 +60,7 @@ export default function Home(props) {
 
     //fetch api/user/:userId/bills
     const response = await fetch(
-      `http://localhost:3000/api/user/${recipient}/bills`,
+      `/api/user/${recipient}/bills`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -89,11 +94,11 @@ export default function Home(props) {
     <>
       <Layout title="Admin Invoice Registration" />
       <main className="flex min-h-screen flex-col items-center justify-between p-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-        <form onSubmit={handleSubmit} className="p-4 md:p-5">
+        <form onSubmit={handleSubmit} className="p-4 md:p-5 w-auto lg:w-2/5 ">
           <div className="flex flex-col">
             <h1 className="text-2xl font-bold mt-8">Invoice Details</h1>
           </div>
-          <div className="flex flex-col shadow-lg p-4 pt-4">
+          <div className="flex flex-col shadow-lg p-4">
             <div className="flex flex-col">
               <label htmlFor="amount" className="text-lg font-bold">
                 Amount
@@ -154,7 +159,7 @@ export default function Home(props) {
                 className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
               >
                 {users.map((user) => (
-                  <option key={user.user_id} value={user.user_id}>
+                  <option key={user.user_id} value={user.user_id} >
                     {user.user_id}
                   </option>
                 ))}

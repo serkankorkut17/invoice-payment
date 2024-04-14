@@ -1,8 +1,9 @@
 import React from "react";
+import 'flowbite';
 
 const Navigation = (props) => {
   return (
-    <nav className="bg-white border-gray-200 dark:bg-gray-900">
+    <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
       <div className="max-w-full flex flex-wrap items-center justify-between mx-auto p-4 border-b-4">
         <a
           href="https://flowbite.com/"
@@ -13,7 +14,7 @@ const Navigation = (props) => {
             className="h-8"
             alt="Flowbite Logo"
           />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap text-gray-900 dark:text-white">
+          <span className="self-center text-3xl font-bold whitespace-nowrap text-gray-900 dark:text-white">
             {props.title}
           </span>
         </a>

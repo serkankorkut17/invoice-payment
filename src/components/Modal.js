@@ -16,7 +16,7 @@ const Modal = ({ setOpenModal, setUsers }) => {
       return;
     }
     const user_id = username;
-    const response = await fetch("http://localhost:3000/api/users", {
+    const response = await fetch("/api/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_id }),
@@ -24,7 +24,7 @@ const Modal = ({ setOpenModal, setUsers }) => {
     const { message } = await response.json();
 
     if (message === "User created") {
-      fetch("http://localhost:3000/api/users")
+      fetch("/api/users")
         .then((data) => data.json())
         .then((data) => {
           //console.log(data);
