@@ -1,118 +1,184 @@
+import Layout from "@/components/Layout";
 import Image from "next/image";
-import { Inter } from "next/font/google";
+import { useEffect, useState } from "react";
+import Modal from "@/components/Modal";
+import { set } from "mongoose";
 
-const inter = Inter({ subsets: ["latin"] });
+export default function Home(props) {
+  const [users, setUsers] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [form, setForm] = useState({
+    amount: "",
+    dueDate: "",
+    invoiceType: "",
+    recipient: "",
+  });
+  // const users = [
+  //   { user_id: "serkan" },
+  //   { user_id: "mehmet" },
+  //   { user_id: "ali" },
+  //   { user_id: "veli" },
+  // ];
+  useEffect(() => {
+    fetch("http://localhost:3000/api/users")
+      .then((data) => data.json())
+      .then((data) => {
+        //console.log(data);
+        setUsers(data.users);
+        setForm({ ...form, recipient: users.user_id });
+      });
+  }, []);
 
-export default function Home() {
+  const handleFormFieldChange = (fieldName, e) => {
+    setForm({ ...form, [fieldName]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const difference = new Date(form.dueDate).getTime() - Date.now();
+
+    const { amount, dueDate, invoiceType, recipient } = form;
+
+    if (
+      amount === "" ||
+      dueDate === "" ||
+      invoiceType === "" ||
+      recipient === ""
+    ) {
+      alert("Please fill in all fields");
+      return;
+    }
+    if (difference < 0) {
+      alert("Due date must be in the future");
+      return;
+    }
+
+    //fetch api/user/:userId/bills
+    const response = await fetch(
+      `http://localhost:3000/api/user/${recipient}/bills`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bill_type: invoiceType,
+          bill_amount: amount,
+          due_date: dueDate,
+        }),
+      }
+    );
+
+    const { message, newInvoice, billID } = await response.json();
+
+    if (message === "Invoice created") {
+      alert("Invoice created");
+      setForm({ amount: "", dueDate: "", invoiceType: "", recipient: "" });
+      console.log(newInvoice);
+      console.log(billID);
+    } else {
+      alert(message);
+      setForm({ ...form });
+    }
+  };
+
+  const newRecipientHandler = () => {
+    setOpenModal(true);
+    console.log("new recipient");
+  };
+
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/pages/index.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    <>
+      <Layout title="Admin Invoice Registration" />
+      <main className="flex min-h-screen flex-col items-center justify-between p-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+        <form onSubmit={handleSubmit} className="p-4 md:p-5">
+          <div className="flex flex-col">
+            <h1 className="text-2xl font-bold mt-8">Invoice Details</h1>
+          </div>
+          <div className="flex flex-col shadow-lg p-4 pt-4">
+            <div className="flex flex-col">
+              <label htmlFor="amount" className="text-lg font-bold">
+                Amount
+              </label>
+              <input
+                type="number"
+                onChange={(e) => handleFormFieldChange("amount", e)}
+                value={form.amount}
+                id="iamount"
+                name="amount"
+                className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
+              />
+            </div>
+            <div className="flex flex-col mt-4">
+              <label htmlFor="dueDate" className="text-lg font-bold">
+                Due Date
+              </label>
+              <input
+                type="date"
+                onChange={(e) => handleFormFieldChange("dueDate", e)}
+                value={form.dueDate}
+                id="dueDate"
+                name="dueDate"
+                className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
+              />
+            </div>
+            <div className="flex flex-col mt-4">
+              <label htmlFor="invoiceType" className="text-lg font-bold">
+                Invoice Type
+              </label>
+              <select
+                id="invoiceType"
+                onChange={(e) => handleFormFieldChange("invoiceType", e)}
+                value={form.invoiceType}
+                name="invoiceType"
+                className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
+              >
+                <option value="electricity">Electricity</option>
+                <option value="water">Water</option>
+                <option value="internet">Internet</option>
+                <option value="phone">Phone</option>
+              </select>
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <h1 className="text-2xl font-bold mt-8">Recipient Selection</h1>
+          </div>
+          <div className="flex flex-col shadow-lg p-4 pt-4">
+            <div className="flex flex-col">
+              <label htmlFor="recipient" className="text-lg font-bold">
+                Select Recipient
+              </label>
+              <select
+                id="recipient"
+                onChange={(e) => handleFormFieldChange("recipient", e)}
+                value={form.recipient}
+                name="recipient"
+                className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
+              >
+                {users.map((user) => (
+                  <option key={user.user_id} value={user.user_id}>
+                    {user.user_id}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                onClick={newRecipientHandler}
+                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-sm text-sm px-2 py-2 mt-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+              >
+                Add New Recipient
+              </button>
+            </div>
+          </div>
+          <div className="flex flex-col pt-4">
+            <button
+              type="submit"
+              className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-sm text-sm px-2 py-2 mt-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+            >
+              Submit Invoice
+            </button>
+          </div>
+        </form>
+      </main>
+      {openModal && <Modal setOpenModal={setOpenModal} setUsers={setUsers} />}
+    </>
   );
 }

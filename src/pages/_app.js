@@ -5,9 +5,9 @@ import { UserProvider } from "@/context/User";
 export default function App({ Component, pageProps }) {
   return (
       <UserProvider>
-          <Layout>
+          {/* <Layout> */}
             <Component {...pageProps} />
-          </Layout>
+          {/* </Layout> */}
       </UserProvider>
   );
 }

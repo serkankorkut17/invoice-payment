@@ -1,16 +1,20 @@
-import React from 'react'
-import Navigation from './Navigation'
+import { useEffect } from "react";
+import Navigation from "./Navigation";
+import Head from "next/head";
 
-const Layout = () => {
+const Layout = (props) => {
+  // useEffect(() => {
+  //   document.querySelector("html").classList.add("dark");
+  // });
+
   return (
-    <div>
+    <div className="m-0">
       <Head>
         <title>Invoice Payment</title>
       </Head>
-      <Navigation />
-      <main>{props.children}</main>
+      <Navigation title={props.title} />
     </div>
   );
-}
+};
 
-export default Layout
+export default Layout;
