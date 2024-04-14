@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import connectDatabase from '../../utils/database';
+import connectDatabase from '@/utils/database';
+import Invoice from '@/models/invoice';
 
 export default async function handler(req, res) {
   try {
@@ -8,7 +9,7 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
       // get specific user's specific bill
       const { userId, billId } = req.query;
-      const bill = await mongoose.models.Invoice.findOne({
+      const bill = await Invoice.findOne({
         user_id: userId,
         _id: billId,
       });
@@ -23,7 +24,7 @@ export default async function handler(req, res) {
         // update specific user's specific bill
         const { userId, billId } = req.query;
         const { bill_type, bill_amount, due_date, payment_status } = req.body;
-        const bill = await mongoose.models.Invoice.findOne({
+        const bill = await Invoice.findOne({
             user_id: userId,
             _id: billId,
         });

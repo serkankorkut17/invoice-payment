@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const MONGODB_URL =
-  'mongodb+srv://serkankorkut17:Merhaba123@serkan.zbepuho.mongodb.net/InvoicePayment?retryWrites=true&w=majority';
+  'mongodb+srv://serkankorkut17:Merhaba123@project.if1cbmc.mongodb.net/?retryWrites=true&w=majority&appName=project';
 
 const connectDatabase = async () => {
   try {

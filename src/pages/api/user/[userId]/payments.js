@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import connectDatabase from '../../utils/database';
+import connectDatabase from '@/utils/database';
+import Invoice from '@/models/invoice';
 
 export default async function handler(req, res) {
   try {
@@ -7,14 +8,14 @@ export default async function handler(req, res) {
     //* GET METHOD *//
     if (req.method === 'GET') {
       const { userId } = req.query;
-      const payments = await mongoose.models.Invoice.find({ user_id: userId });
+      const payments = await Invoice.find({ user_id: userId });
       res.status(200).json({ payments });
     }
     //* POST METHOD *//
     if (req.method === 'POST') {
       const { bill_id, payment_amount, payment_method } = req.body;
 
-      const invoice = await mongoose.models.Invoice.findOne({
+      const invoice = await Invoice.findOne({
         _id: bill_id,
       });
 
@@ -32,10 +33,13 @@ export default async function handler(req, res) {
       } else {
         invoice.payment_status = 'Paid';
         await invoice.save();
+        res
+          .status(201)
+          .json({
+            message: 'Payment successful',
+            invoiceId: invoice._id.toString(),
+          });
       }
-      res
-        .status(201)
-        .json({ message: 'Payment successful', paymentID: paymentId });
     }
   } catch (error) {
     console.log(error);
