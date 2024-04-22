@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     //* GET METHOD *//
     if (req.method === 'GET') {
       const { userId } = req.query;
-      const payments = await Invoice.find({ user_id: userId });
+      const payments = await Invoice.find({ user_id: userId, payment_status: 'Paid'});
       res.status(200).json({ payments });
     }
     //* POST METHOD *//

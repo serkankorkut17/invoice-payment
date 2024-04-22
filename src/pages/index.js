@@ -40,6 +40,7 @@ export default function Home(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(form);
     const difference = new Date(form.dueDate).getTime() - Date.now();
 
     const { amount, dueDate, invoiceType, recipient } = form;
@@ -93,12 +94,12 @@ export default function Home(props) {
   return (
     <>
       <Layout title="Admin Invoice Registration" />
-      <main className="flex min-h-screen flex-col items-center justify-between p-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+      <main className="flex min-h-screen flex-col items-center justify-between p-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 mt-2">
         <form onSubmit={handleSubmit} className="p-4 md:p-5 w-auto lg:w-2/5 ">
           <div className="flex flex-col">
             <h1 className="text-2xl font-bold mt-8">Invoice Details</h1>
           </div>
-          <div className="flex flex-col shadow-lg p-4">
+          <div className="flex flex-col shadow-xl p-4">
             <div className="flex flex-col">
               <label htmlFor="amount" className="text-lg font-bold">
                 Amount
@@ -146,7 +147,7 @@ export default function Home(props) {
           <div className="flex flex-col">
             <h1 className="text-2xl font-bold mt-8">Recipient Selection</h1>
           </div>
-          <div className="flex flex-col shadow-lg p-4 pt-4">
+          <div className="flex flex-col shadow-xl p-4 pt-4">
             <div className="flex flex-col">
               <label htmlFor="recipient" className="text-lg font-bold">
                 Select Recipient
