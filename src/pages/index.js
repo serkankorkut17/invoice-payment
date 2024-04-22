@@ -182,7 +182,38 @@ export default function Home(props) {
               Submit Invoice
             </button>
           </div>
+          <div className="flex flex-col">
+            <h1 className="text-2xl font-bold mt-8">Active User Selection</h1>
+          </div>
+          <div className="flex flex-col shadow-xl p-4">
+            <div className="flex flex-col">
+              <label htmlFor="user" className="text-lg font-bold">
+                Select Active User
+              </label>
+              <select
+                id="user"
+                // onChange={(e) => handleFormFieldChange("recipient", e)}
+                // value={form.recipient}
+                name="recipient"
+                className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
+              >
+                {users.map((user) => (
+                  <option key={user.user_id} value={user.user_id} >
+                    {user.user_id}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                onClick={ () => console.log("Set Active User")}
+                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-sm text-sm px-2 py-2 mt-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+              >
+                Select Active User
+              </button>
+            </div>
+          </div>
         </form>
+        
       </main>
       {openModal && <Modal setOpenModal={setOpenModal} setUsers={setUsers} />}
     </>
