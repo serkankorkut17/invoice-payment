@@ -1,7 +1,7 @@
 import React from 'react';
+import Link from 'next/link';
 
 const InvoiceCard = props => {
-  //capitalize the first letter of the invoice type
   const invoiceType = props.invoice.bill_type.charAt(0).toUpperCase() + props.invoice.bill_type.slice(1);
   const invoiceNumber = props.invoice._id.toString();
   const paymentAmount = props.invoice.bill_amount;
@@ -9,7 +9,7 @@ const InvoiceCard = props => {
   const paymentStatus = props.invoice.payment_status === 'Paid' ? true : false;
 
   return (
-    <a
+    <Link
       className={`flex flex-col shadow-xl p-4 pt-4 mb-2 cursor-pointer ${
         paymentStatus ? 'bg-lime-500' : 'bg-white'
       }`}
@@ -79,7 +79,7 @@ const InvoiceCard = props => {
           </svg>
         )}
       </div>
-    </a>
+    </Link>
   );
 };
 

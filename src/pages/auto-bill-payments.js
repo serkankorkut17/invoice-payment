@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react';
 import Layout from '@/components/Layout';
-import Loading from '@/components/Loading';
 import { useUserContext } from '@/context/User';
-import { useRouter } from 'next/router';
 import AutoBillCard from '@/components/AutoBillCard';
 
 const AutoBillPayments = () => {
   const { user } = useUserContext();
   const [autoPayments, setAutoPayments] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
-    billType: '',
-    frequency: '',
-    paymentMethod: '',
+    billType: 'electricity',
+    frequency: 'monthly',
+    paymentMethod: 'Credit/Debit Card',
     paymentAmount: '',
   });
 
@@ -21,6 +20,7 @@ const AutoBillPayments = () => {
       .then(data => {
         //console.log(data);
         setAutoPayments(data.autoPayments);
+        setLoading(false);
       });
   }, []);
 
@@ -43,7 +43,6 @@ const AutoBillPayments = () => {
       return;
     }
 
-    //fetch api/user/:userId/bills
     const response = await fetch(`/api/user/${user}/automatic-payments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -58,18 +57,16 @@ const AutoBillPayments = () => {
     if (message === 'Automatic Payment created') {
       alert('Automatic Payment created');
       setForm({
-        billType: '',
-        frequency: '',
-        paymentMethod: '',
+        ...form,
         paymentAmount: '',
       });
       console.log(message, newAutoPayment);
       fetch(`/api/user/${user}/automatic-payments`)
-      .then(data => data.json())
-      .then(data => {
-        //console.log(data);
-        setAutoPayments(data.autoPayments);
-      });
+        .then(data => data.json())
+        .then(data => {
+          //console.log(data);
+          setAutoPayments(data.autoPayments);
+        });
     } else {
       alert(message);
       setForm({ ...form });
@@ -78,9 +75,12 @@ const AutoBillPayments = () => {
 
   return (
     <>
-      <Layout title="Admin Invoice Registration" />
+      <Layout title="Auto Bill Payment" />
       <main className="flex min-h-screen flex-col items-center p-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 mt-2">
-        <form onSubmit={handleSubmit} className="pt-4 md:pt-5 px-4 md:px-5 w-auto lg:w-2/5 ">
+        <form
+          onSubmit={handleSubmit}
+          className="pt-4 md:pt-5 px-4 md:px-5 w-auto lg:w-2/5 "
+        >
           <div className="flex flex-col">
             <h1 className="text-2xl font-bold mt-8">New Bill Payment Form</h1>
           </div>
@@ -164,9 +164,23 @@ const AutoBillPayments = () => {
               Existing Orders Management
             </h1>
           </div>
-            {autoPayments.map(autoPayment => (
-                <AutoBillCard key={autoPayment._id} autoPayment={autoPayment} />
+          {autoPayments &&
+            autoPayments.map(autoPayment => (
+              <AutoBillCard
+                key={autoPayment._id}
+                autoPayment={autoPayment}
+                setAutoPayments={setAutoPayments}
+                user={user}
+              />
             ))}
+          {loading && (
+            <p className="text-lg text-gray-900 dark:text-white">Loading...</p>
+          )}
+          {autoPayments.length === 0 && !loading && (
+            <p className="text-lg text-gray-900 dark:text-white">
+              No automatic payments found
+            </p>
+          )}
         </div>
       </main>
     </>
