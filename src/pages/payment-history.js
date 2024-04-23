@@ -5,7 +5,6 @@ import Loading from '@/components/Loading';
 import { useUserContext } from '@/context/User';
 import { useRouter } from 'next/router';
 
-
 const PaymentHistory = () => {
   const [payments, setPayments] = useState([]);
   const { user } = useUserContext();
@@ -29,9 +28,15 @@ const PaymentHistory = () => {
       <Layout title="Payment History" />
       <main className="flex min-h-screen flex-col items-center p-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 mt-2">
         <div className="flex flex-col p-4 md:p-5 w-auto lg:w-2/5">
-          {payments.map(payment => (
-            <PaymentCard key={payment._id} payment={payment} />
-          ))}
+          {payments &&
+            payments.map(payment => (
+              <PaymentCard key={payment._id} payment={payment} />
+            ))}
+          {payments.length === 0 && (
+            <div className="flex flex-col items-center justify-center p-4 md:p-5 w-auto lg:w-2/5">
+              <h1 className="text-2xl font-bold mt-8">No Payments Found</h1>
+            </div>
+          )}
         </div>
       </main>
     </>

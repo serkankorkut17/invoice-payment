@@ -42,6 +42,10 @@ const InvoiceDetails = () => {
     }
   }, [router.query.invoiceId, user]);
 
+  const automaticBillPaymentHandler = () => {
+    router.push('/auto-bill-payments');
+  };
+
   const handleSubmit = async e => {
     e.preventDefault();
     const { amount, method } = form;
@@ -64,7 +68,7 @@ const InvoiceDetails = () => {
 
     if (message === 'Payment successful') {
       alert('Payment successful');
-      setForm({ amount: ''});
+      setForm({ amount: '' });
       fetch(`/api/user/${user}/bills/${router.query.invoiceId}`)
         .then(data => data.json())
         .then(data => {
@@ -219,7 +223,7 @@ const InvoiceDetails = () => {
             </div>
             <button
               type="button"
-              onClick={() => console.log('Set Automatic Bill Payment Order')}
+              onClick={automaticBillPaymentHandler}
               className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-sm text-sm px-2 py-2 mt-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
             >
               Set Automatic Bill Payment Order
