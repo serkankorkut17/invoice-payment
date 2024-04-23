@@ -1,31 +1,25 @@
 import { useContext, createContext, useState, useEffect } from 'react';
 
-
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [activeUser, setActiveUser] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = window.localStorage.getItem('user');
-    console.log('active useff context', storedUser);
+    const storedUser = localStorage.getItem('user');
+    console.log('stored user:', storedUser);
     if (storedUser) {
-      setActiveUser(JSON.parse(storedUser));
+      setUser(JSON.parse(storedUser));
     }
   }, []);
 
   const login = userData => {
-    setActiveUser(userData);
-    window.localStorage.setItem('user', JSON.stringify(userData))
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
   };
 
-  // useEffect(() => {
-  //   window.localStorage.setItem('user', JSON.stringify(activeUser));
-  //   console.log('active login context', activeUser);
-  // }, [activeUser]);
-
   return (
-    <UserContext.Provider value={{ activeUser, login }}>
+    <UserContext.Provider value={{ user, login }}>
       {children}
     </UserContext.Provider>
   );

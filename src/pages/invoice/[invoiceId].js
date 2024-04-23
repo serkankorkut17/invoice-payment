@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import Layout from '@/components/Layout';
+import Loading from '@/components/Loading';
+import { useUserContext } from '@/context/User';
 import { useRouter } from 'next/router';
 
 const InvoiceDetails = () => {
   const router = useRouter();
+  const { user } = useUserContext();
+  const [loading, setLoading] = useState(true);
 
   const [invoiceType, setInvoiceType] = useState('');
   const [invoiceNumber, setInvoiceNumber] = useState('');
@@ -17,9 +21,8 @@ const InvoiceDetails = () => {
   });
 
   useEffect(() => {
-    if (router.query.invoiceId) {
-      const userId = 'serkan';
-      fetch(`/api/user/${userId}/bills/${router.query.invoiceId}`)
+    if (router.query.invoiceId && user) {
+      fetch(`/api/user/${user}/bills/${router.query.invoiceId}`)
         .then(data => data.json())
         .then(data => {
           //console.log(data);
@@ -31,23 +34,23 @@ const InvoiceDetails = () => {
           setPaymentAmount(data.bill.bill_amount);
           setDueDate(data.bill.due_date.split('T')[0]);
           setPaymentStatus(data.bill.payment_status === 'Paid' ? true : false);
+          setLoading(false);
         })
         .catch(error => {
           console.log(error);
         });
     }
-  }, [router.query.invoiceId]);
+  }, [router.query.invoiceId, user]);
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const userId = 'serkan';
     const { amount, method } = form;
     if (amount === '' || method === '' || invoiceNumber === '') {
       alert('Please fill in all fields');
       return;
     }
     //fetch api/user/:userId/payments
-    const response = await fetch(`/api/user/${userId}/payments`, {
+    const response = await fetch(`/api/user/${user}/payments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -62,7 +65,7 @@ const InvoiceDetails = () => {
     if (message === 'Payment successful') {
       alert('Payment successful');
       setForm({ amount: ''});
-      fetch(`/api/user/${userId}/bills/${router.query.invoiceId}`)
+      fetch(`/api/user/${user}/bills/${router.query.invoiceId}`)
         .then(data => data.json())
         .then(data => {
           //console.log(data);
@@ -90,6 +93,7 @@ const InvoiceDetails = () => {
 
   return (
     <>
+      {loading && <Loading />}
       <Layout title="Invoice Details" />
       <main className="flex min-h-screen flex-col items-center p-8 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 mt-2">
         <div className="flex flex-col px-4 md:px-5 pt-4 md:pt-5 w-auto lg:w-2/5">

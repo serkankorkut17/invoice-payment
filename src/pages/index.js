@@ -1,86 +1,71 @@
-import Layout from "@/components/Layout";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import Modal from "@/components/Modal";
-import { useUserContext } from "@/context/User";
+import Layout from '@/components/Layout';
+import { useEffect, useState } from 'react';
+import Modal from '@/components/Modal';
+import { useUserContext } from '@/context/User';
 
 export default function Home(props) {
   const [users, setUsers] = useState([]);
-  //const { activeUser, login } = useUserContext();
+  const { user, login } = useUserContext();
   const [openModal, setOpenModal] = useState(false);
   const [form, setForm] = useState({
-    amount: "",
-    dueDate: "",
-    invoiceType: "",
-    recipient: "",
-    activeUser: "",
+    amount: '',
+    dueDate: '',
+    invoiceType: '',
+    recipient: '',
+    activeUser: '',
   });
 
-  //console.log("active index", activeUser);
-  
   useEffect(() => {
-    fetch("http://localhost:3000/api/users")
-      .then((data) => data.json())
-      .then((data) => {
+    fetch('http://localhost:3000/api/users')
+      .then(data => data.json())
+      .then(data => {
         //console.log(data);
         setUsers(data.users);
         setForm({ ...form, recipient: data.users[0].user_id });
+        //setForm({ ...form, activeUser: data.users[0].user_id});
       });
   }, []);
-
-  // const compareUsers = (user) => {
-  //   if (user.user_id === activeUser) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
 
   const handleFormFieldChange = (fieldName, e) => {
     setForm({ ...form, [fieldName]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    console.log(form);
     const difference = new Date(form.dueDate).getTime() - Date.now();
-
     const { amount, dueDate, invoiceType, recipient } = form;
 
     if (
-      amount === "" ||
-      dueDate === "" ||
-      invoiceType === "" ||
-      recipient === ""
+      amount === '' ||
+      dueDate === '' ||
+      invoiceType === '' ||
+      recipient === ''
     ) {
-      alert("Please fill in all fields");
+      alert('Please fill in all fields');
       return;
     }
     if (difference < 0) {
-      alert("Due date must be in the future");
+      alert('Due date must be in the future');
       return;
     }
 
     //fetch api/user/:userId/bills
-    const response = await fetch(
-      `/api/user/${recipient}/bills`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          bill_type: invoiceType,
-          bill_amount: amount,
-          due_date: dueDate,
-        }),
-      }
-    );
+    const response = await fetch(`/api/user/${recipient}/bills`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        bill_type: invoiceType,
+        bill_amount: amount,
+        due_date: dueDate,
+      }),
+    });
 
     const { message, newInvoice, billID } = await response.json();
 
-    if (message === "Invoice created") {
-      alert("Invoice created");
-      setForm({ amount: "", dueDate: "", invoiceType: "", recipient: "" });
-      console.log(newInvoice);
-      console.log(billID);
+    if (message === 'Invoice created') {
+      alert('Invoice created');
+      setForm({ amount: '', dueDate: '', invoiceType: '', recipient: '' });
+      console.log(message, newInvoice, billID);
     } else {
       alert(message);
       setForm({ ...form });
@@ -89,7 +74,10 @@ export default function Home(props) {
 
   const newRecipientHandler = () => {
     setOpenModal(true);
-    console.log("new recipient");
+  };
+
+  const activeUserHandler = () => {
+    login(form.activeUser);
   };
 
   return (
@@ -107,7 +95,7 @@ export default function Home(props) {
               </label>
               <input
                 type="number"
-                onChange={(e) => handleFormFieldChange("amount", e)}
+                onChange={e => handleFormFieldChange('amount', e)}
                 value={form.amount}
                 id="iamount"
                 name="amount"
@@ -120,7 +108,7 @@ export default function Home(props) {
               </label>
               <input
                 type="date"
-                onChange={(e) => handleFormFieldChange("dueDate", e)}
+                onChange={e => handleFormFieldChange('dueDate', e)}
                 value={form.dueDate}
                 id="dueDate"
                 name="dueDate"
@@ -133,7 +121,7 @@ export default function Home(props) {
               </label>
               <select
                 id="invoiceType"
-                onChange={(e) => handleFormFieldChange("invoiceType", e)}
+                onChange={e => handleFormFieldChange('invoiceType', e)}
                 value={form.invoiceType}
                 name="invoiceType"
                 className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
@@ -155,13 +143,13 @@ export default function Home(props) {
               </label>
               <select
                 id="recipient"
-                onChange={(e) => handleFormFieldChange("recipient", e)}
+                onChange={e => handleFormFieldChange('recipient', e)}
                 value={form.recipient}
                 name="recipient"
                 className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
               >
-                {users.map((user) => (
-                  <option key={user.user_id} value={user.user_id} >
+                {users.map(user => (
+                  <option key={user.user_id} value={user.user_id}>
                     {user.user_id}
                   </option>
                 ))}
@@ -193,20 +181,20 @@ export default function Home(props) {
               </label>
               <select
                 id="activeUser"
-                onChange={(e) => handleFormFieldChange("activeUser", e)}
-                value={form.activeUser}
+                onChange={e => handleFormFieldChange('activeUser', e)}
+                value={form.activeUser ? form.activeUser : user ? user : ''}
                 name="activeUser"
                 className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
               >
-                {users.map((user) => (
-                  <option key={user.user_id} value={user.user_id} >
+                {users.map(user => (
+                  <option key={user.user_id} value={user.user_id}>
                     {user.user_id}
                   </option>
                 ))}
               </select>
               <button
                 type="button"
-                onClick={ () => console.log(form.activeUser)}
+                onClick={activeUserHandler}
                 className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-sm text-sm px-2 py-2 mt-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
               >
                 Select Active User
@@ -214,7 +202,6 @@ export default function Home(props) {
             </div>
           </div>
         </form>
-        
       </main>
       {openModal && <Modal setOpenModal={setOpenModal} setUsers={setUsers} />}
     </>
