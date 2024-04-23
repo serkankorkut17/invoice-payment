@@ -16,7 +16,7 @@ export default function Home(props) {
   });
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/users')
+    fetch('/api/users')
       .then(data => data.json())
       .then(data => {
         //console.log(data);
@@ -97,7 +97,7 @@ export default function Home(props) {
                 type="number"
                 onChange={e => handleFormFieldChange('amount', e)}
                 value={form.amount}
-                id="iamount"
+                id="amount"
                 name="amount"
                 className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
               />

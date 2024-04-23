@@ -203,10 +203,10 @@ const InvoiceDetails = () => {
                 name="method"
                 className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
               >
-                <option value="electricity">Credit/Debit Card</option>
-                <option value="water">BKM Express</option>
-                <option value="internet">Paycell</option>
-                <option value="phone">GPay</option>
+                <option value="Credit/Debit Card">Credit/Debit Card</option>
+                <option value="BKM Express">BKM Express</option>
+                <option value="Paycell">Paycell</option>
+                <option value="GPay">GPay</option>
               </select>
             </div>
             <div className="flex flex-col pt-4">
