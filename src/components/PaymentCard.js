@@ -15,11 +15,12 @@ const PaymentCard = props => {
     setLoading(true);
     const response = await fetch(`/api/user/${props.payment.user_id}/payments/${props.payment._id}`);
     const blob = await response.blob();
-    const url = window.URL.createObjectURL(new Blob([blob]));
+    // const url = window.URL.createObjectURL(new Blob([blob]));
+    const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    // link.setAttribute('download', `${props.payment.user_id}_${paymentDate}.pdf`);
-    link.setAttribute('download', 'receipt.pdf');
+    link.setAttribute('download', `${props.payment.user_id}_${paymentDate}.pdf`);
+    // link.setAttribute('download', 'receipt.pdf');
     document.body.appendChild(link);
     link.click();
     link.parentNode.removeChild(link);

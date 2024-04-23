@@ -1,9 +1,7 @@
 import connectDatabase from '@/utils/database';
 import Invoice from '@/models/invoice';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import PDFDocument from 'pdfkit';
+import { Readable } from 'stream';
 
 export default async function handler(req, res) {
   try {
@@ -13,37 +11,32 @@ export default async function handler(req, res) {
       const { userId, billId } = req.query;
       const payment = await Invoice.findOne({ user_id: userId, _id: billId });
 
-      const docDefinition = {
-        content: [
-          { text: 'Payment Receipt', style: 'header' },
-          { text: `Invoice ID: ${payment._id}`, style: 'subheader' },
-          { text: `Amount: $${payment.bill_amount}`, style: 'subheader' },
-          { text: `Due Date: ${payment.due_date}`, style: 'subheader' },
-          {
-            text: `Payment Status: ${payment.payment_status}`,
-            style: 'subheader',
-          },
-        ],
-        styles: {
-          header: {
-            fontSize: 18,
-            bold: true,
-            margin: [0, 0, 0, 10],
-          },
-          subheader: {
-            fontSize: 14,
-            bold: true,
-            margin: [0, 10, 0, 5],
-          },
-        },
-      };
+      const doc = new PDFDocument();
+      const stream = doc.pipe(new Readable().wrap(res));
 
-      const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+      doc.fontSize(30).text('Payment Receipt', { align: 'center' });
+      doc.moveDown();
+      doc.fontSize(25).text('Payment Details', { underline: true });
+      doc.moveDown();
+      doc.fontSize(20);
+      doc.text(`Invoice Type: ${payment.bill_type.toString()}`);
+      doc.moveDown();
+      doc.text(`Invoice ID: ${payment._id.toString()}`);
+      doc.moveDown();
+      doc.text(`User ID: ${payment.user_id.toString()}`);
+      doc.moveDown();
+      doc.text(`Amount: ${payment.bill_amount.toString()}TL`);
+      doc.moveDown();
+      doc.text(`Due Date: ${payment.due_date.toString()}`);
+      doc.moveDown();
+      doc.text(`Payment Status: ${payment.payment_status.toString()}`);
 
-      pdfDocGenerator.getBuffer(buffer => {
-        res.setHeader('Content-Disposition', 'attachment; filename=report.pdf');
+      doc.end();
+      stream.on('finish', () => {
+        // The PDF has been written
         res.setHeader('Content-Type', 'application/pdf');
-        res.send(buffer);
+        res.setHeader('Content-Disposition', 'attachment; filename=report.pdf');
+        res.end(stream);
       });
     }
   } catch (error) {

@@ -4,6 +4,7 @@ import InvoiceCard from '@/components/InvoiceCard';
 import Loading from '@/components/Loading';
 import { useUserContext } from '@/context/User';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const InvoiceManager = () => {
   const [invoices, setInvoices] = useState([]);
@@ -37,15 +38,16 @@ const InvoiceManager = () => {
             <InvoiceCard key={invoice._id} invoice={invoice} />
           ))}
           <div className="flex flex-col">
-            <a
+            <Link
               className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-sm text-sm px-2 py-2 mt-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 flex items-center justify-center cursor-pointer"
-              href="/paymenthistory"
+              href="/payment-history"
             >
               Payment History
-            </a>
-            <a className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-sm text-sm px-2 py-2 mt-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 flex items-center justify-center cursor-pointer">
+            </Link>
+            <Link className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-sm text-sm px-2 py-2 mt-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 flex items-center justify-center cursor-pointer"
+            href="/auto-bill-payments">
               Auto Bill Payments
-            </a>
+            </Link>
           </div>
         </div>
       </main>
