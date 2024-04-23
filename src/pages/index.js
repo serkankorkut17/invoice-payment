@@ -13,6 +13,7 @@ export default function Home(props) {
     dueDate: "",
     invoiceType: "",
     recipient: "",
+    activeUser: "",
   });
 
   //console.log("active index", activeUser);
@@ -191,10 +192,10 @@ export default function Home(props) {
                 Select Active User
               </label>
               <select
-                id="user"
-                // onChange={(e) => handleFormFieldChange("recipient", e)}
-                // value={form.recipient}
-                name="recipient"
+                id="activeUser"
+                onChange={(e) => handleFormFieldChange("activeUser", e)}
+                value={form.activeUser}
+                name="activeUser"
                 className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
               >
                 {users.map((user) => (
@@ -205,7 +206,7 @@ export default function Home(props) {
               </select>
               <button
                 type="button"
-                onClick={ () => console.log("Set Active User")}
+                onClick={ () => console.log(form.activeUser)}
                 className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-sm text-sm px-2 py-2 mt-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
               >
                 Select Active User
