@@ -21,13 +21,14 @@ export default function Home(props) {
       .then(data => {
         //console.log(data);
         setUsers(data.users);
-        setForm({ ...form, recipient: data.users[0].user_id });
+        setForm({ ...form, recipient: data.users[0].user_id, invoiceType: 'electricity' });
         //setForm({ ...form, activeUser: data.users[0].user_id});
       });
   }, []);
 
   const handleFormFieldChange = (fieldName, e) => {
     setForm({ ...form, [fieldName]: e.target.value });
+    console.log(form);
   };
 
   const handleSubmit = async e => {
