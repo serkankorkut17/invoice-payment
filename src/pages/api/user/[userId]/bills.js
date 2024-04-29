@@ -9,6 +9,7 @@ export default async function handler(req, res) {
     //* GET METHOD *//
     if (req.method === 'GET') {
       const { userId } = req.query;
+
       const bills = await Invoice.find({ user_id: userId });
       res.status(200).json({ bills });
     }
@@ -20,6 +21,11 @@ export default async function handler(req, res) {
       let { bill_type, bill_amount, due_date } = req.body;
       due_date = new Date(due_date);
       const payment_status = 'Unpaid';
+
+      if (isNaN(bill_amount)) {
+        res.status(400).json({ message: 'Bill amount must be a number' });
+        return;
+      }
 
       const newInvoice = new Invoice({ user_id, bill_type, bill_amount, due_date, payment_status });
 

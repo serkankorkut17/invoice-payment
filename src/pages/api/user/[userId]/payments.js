@@ -19,6 +19,15 @@ export default async function handler(req, res) {
         _id: bill_id,
       });
 
+      if (!invoice) {
+        res.status(404).json({ message: 'Invoice not found' });
+        return;
+      } //check if payment_amount is a number
+      if (isNaN(payment_amount)) {
+        res.status(400).json({ message: 'Payment amount must be a number' });
+        return;
+      } 
+
       if (invoice.payment_status === 'Paid') {
         res.status(400).json({ message: 'Bill already paid' });
         return;
