@@ -135,7 +135,7 @@ const AutoBillPayments = () => {
                 <option value="GPay">GPay</option>
               </select>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col mt-4">
               <label htmlFor="paymentAmount" className="text-lg font-bold">
                 Amount
               </label>
