@@ -33,7 +33,8 @@ export default function Home(props) {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const difference = new Date(form.dueDate).getTime() - Date.now();
+    const today = new Date().toISOString().split('T')[0];
+    const difference = new Date(form.dueDate).getTime() - new Date(today).getTime();
     const { amount, dueDate, invoiceType, recipient } = form;
 
     if (
@@ -65,7 +66,7 @@ export default function Home(props) {
 
     if (message === 'Invoice created') {
       alert('Invoice created');
-      setForm({ amount: '', dueDate: '', invoiceType: '', recipient: '' });
+      setForm({ ...form, amount: ''});
       console.log(message, newInvoice, billID);
     } else {
       alert(message);
