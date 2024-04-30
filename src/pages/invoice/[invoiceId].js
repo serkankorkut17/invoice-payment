@@ -1,30 +1,30 @@
-import { useState, useEffect } from 'react';
-import Layout from '@/components/Layout';
-import Loading from '@/components/Loading';
-import { useUserContext } from '@/context/User';
-import { useRouter } from 'next/router';
+import { useState, useEffect } from "react";
+import Layout from "@/components/Layout";
+import Loading from "@/components/Loading";
+import { useUserContext } from "@/context/User";
+import { useRouter } from "next/router";
 
 const InvoiceDetails = () => {
   const router = useRouter();
   const { user } = useUserContext();
   const [loading, setLoading] = useState(true);
 
-  const [invoiceType, setInvoiceType] = useState('');
-  const [invoiceNumber, setInvoiceNumber] = useState('');
-  const [paymentAmount, setPaymentAmount] = useState('');
-  const [dueDate, setDueDate] = useState('');
+  const [invoiceType, setInvoiceType] = useState("");
+  const [invoiceNumber, setInvoiceNumber] = useState("");
+  const [paymentAmount, setPaymentAmount] = useState("");
+  const [dueDate, setDueDate] = useState("");
   const [paymentStatus, setPaymentStatus] = useState(false);
 
   const [form, setForm] = useState({
-    amount: '',
-    method: 'Credit/Debit Card',
+    amount: "",
+    method: "Credit/Debit Card",
   });
 
   useEffect(() => {
     if (router.query.invoiceId && user) {
       fetch(`/api/user/${user}/bills/${router.query.invoiceId}`)
-        .then(data => data.json())
-        .then(data => {
+        .then((data) => data.json())
+        .then((data) => {
           //console.log(data);
           setInvoiceType(
             data.bill.bill_type.charAt(0).toUpperCase() +
@@ -32,31 +32,31 @@ const InvoiceDetails = () => {
           );
           setInvoiceNumber(data.bill._id.toString());
           setPaymentAmount(data.bill.bill_amount);
-          setDueDate(data.bill.due_date.split('T')[0]);
-          setPaymentStatus(data.bill.payment_status === 'Paid' ? true : false);
+          setDueDate(data.bill.due_date.split("T")[0]);
+          setPaymentStatus(data.bill.payment_status === "Paid" ? true : false);
           setLoading(false);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     }
   }, [router.query.invoiceId, user]);
 
   const automaticBillPaymentHandler = () => {
-    router.push('/auto-bill-payments');
+    router.push("/auto-bill-payments");
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const { amount, method } = form;
-    if (amount === '' || method === '' || invoiceNumber === '') {
-      alert('Please fill in all fields');
+    if (amount === "" || method === "" || invoiceNumber === "") {
+      alert("Please fill in all fields");
       return;
     }
     //fetch api/user/:userId/payments
     const response = await fetch(`/api/user/${user}/payments`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         bill_id: invoiceNumber,
         payment_amount: amount,
@@ -66,12 +66,12 @@ const InvoiceDetails = () => {
 
     const { message } = await response.json();
 
-    if (message === 'Payment successful') {
-      alert('Payment successful');
-      setForm({ amount: '' });
+    if (message === "Payment successful") {
+      alert("Payment successful");
+      setForm({ amount: "" });
       fetch(`/api/user/${user}/bills/${router.query.invoiceId}`)
-        .then(data => data.json())
-        .then(data => {
+        .then((data) => data.json())
+        .then((data) => {
           //console.log(data);
           setInvoiceType(
             data.bill.bill_type.charAt(0).toUpperCase() +
@@ -79,10 +79,10 @@ const InvoiceDetails = () => {
           );
           setInvoiceNumber(data.bill._id.toString());
           setPaymentAmount(data.bill.bill_amount);
-          setDueDate(data.bill.due_date.split('T')[0]);
-          setPaymentStatus(data.bill.payment_status === 'Paid' ? true : false);
+          setDueDate(data.bill.due_date.split("T")[0]);
+          setPaymentStatus(data.bill.payment_status === "Paid" ? true : false);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     } else {
@@ -94,6 +94,22 @@ const InvoiceDetails = () => {
   const handleFormFieldChange = (fieldName, e) => {
     setForm({ ...form, [fieldName]: e.target.value });
   };
+
+  const requestHandler = async () => {
+    setLoading(true);
+    const response = await fetch(`/api/user/${user}/payments/${invoiceNumber}`);
+    const blob = await response.blob();
+    // const url = window.URL.createObjectURL(new Blob([blob]));
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `${user}_${invoiceNumber}.pdf`);
+    // link.setAttribute('download', 'receipt.pdf');
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+    setLoading(false);
+  }
 
   return (
     <>
@@ -128,7 +144,7 @@ const InvoiceDetails = () => {
               </p>
               <p className="text-lg text-gray-900 dark:text-white">
                 {paymentAmount}
-                {String.fromCodePoint('0x20BA')}
+                {String.fromCodePoint("0x20BA")}
               </p>
             </div>
             <div className="flex flex-row justify-between">
@@ -178,58 +194,75 @@ const InvoiceDetails = () => {
           </div>
         </div>
         {/* ---------------------------------------- */}
-        <form onSubmit={handleSubmit} className="px-4 md:px-5 w-auto lg:w-2/5">
+        <div className="px-4 md:px-5 w-auto lg:w-2/5">
           <div className="flex flex-col ">
             <h1 className="text-2xl font-bold mt-8">Payment Options</h1>
           </div>
           <div className="flex flex-col shadow-xl p-4">
+            {!paymentStatus && (
+              <form onSubmit={handleSubmit} className="">
+                <div className="flex flex-col">
+                  <label htmlFor="amount" className="text-lg font-bold">
+                    Payment Amount
+                  </label>
+                  <input
+                    type="number"
+                    onChange={(e) => handleFormFieldChange("amount", e)}
+                    value={form.amount}
+                    id="amount"
+                    name="amount"
+                    className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
+                  />
+                </div>
+                <div className="flex flex-col mt-4">
+                  <label htmlFor="invoiceType" className="text-lg font-bold">
+                    Payment Method
+                  </label>
+                  <select
+                    id="method"
+                    onChange={(e) => handleFormFieldChange("method", e)}
+                    value={form.method}
+                    name="method"
+                    className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
+                  >
+                    <option value="Credit/Debit Card">Credit/Debit Card</option>
+                    <option value="BKM Express">BKM Express</option>
+                    <option value="Paycell">Paycell</option>
+                    <option value="GPay">GPay</option>
+                  </select>
+                </div>
+                <div className="flex flex-col pt-4">
+                  <button
+                    type="submit"
+                    className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-sm text-sm px-2 py-2 mt-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                  >
+                    Pay Now
+                  </button>
+                </div>
+              </form>
+            )}
+            {paymentStatus && (
+              <div className="flex flex-col">
+                <button
+                  type="button"
+                  onClick={requestHandler}
+                  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-sm text-sm px-2 py-2 mt-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                >
+                  Request Receipt
+                </button>
+              </div>
+            )}
             <div className="flex flex-col">
-              <label htmlFor="amount" className="text-lg font-bold">
-                Payment Amount
-              </label>
-              <input
-                type="number"
-                onChange={e => handleFormFieldChange('amount', e)}
-                value={form.amount}
-                id="amount"
-                name="amount"
-                className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
-              />
-            </div>
-            <div className="flex flex-col mt-4">
-              <label htmlFor="invoiceType" className="text-lg font-bold">
-                Payment Method
-              </label>
-              <select
-                id="method"
-                onChange={e => handleFormFieldChange('method', e)}
-                value={form.method}
-                name="method"
-                className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
-              >
-                <option value="Credit/Debit Card">Credit/Debit Card</option>
-                <option value="BKM Express">BKM Express</option>
-                <option value="Paycell">Paycell</option>
-                <option value="GPay">GPay</option>
-              </select>
-            </div>
-            <div className="flex flex-col pt-4">
               <button
-                type="submit"
+                type="button"
+                onClick={automaticBillPaymentHandler}
                 className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-sm text-sm px-2 py-2 mt-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
               >
-                Pay Now
+                Set Automatic Bill Payment Order
               </button>
             </div>
-            <button
-              type="button"
-              onClick={automaticBillPaymentHandler}
-              className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-sm text-sm px-2 py-2 mt-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-            >
-              Set Automatic Bill Payment Order
-            </button>
           </div>
-        </form>
+        </div>
       </main>
     </>
   );

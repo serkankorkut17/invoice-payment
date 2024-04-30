@@ -5,7 +5,8 @@ import Loading from '@/components/Loading';
 import { useUserContext } from '@/context/User';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import 'flowbite';
+// import 'flowbite';
+
 
 const InvoiceManager = () => {
   const [unsortedInvoices, setUnsortedInvoices] = useState([]);
@@ -84,6 +85,10 @@ const InvoiceManager = () => {
   };
 
   const filterHandler = input => {
+    // if (input === 'button') {
+    //   const dropdown = document.getElementById('dropdownBgHover');
+    //   dropdown.classList.toggle('hidden');
+    // }
     if (input === 'unpaid') {
       setForm({ ...form, unpaid: !form.unpaid });
     }
@@ -103,7 +108,7 @@ const InvoiceManager = () => {
     if (form.dueSoon) {
       newInvoices = newInvoices.filter(invoice => {
         const difference = new Date(invoice.due_date).getTime() - Date.now();
-        return difference < 604800000 && difference > 0;
+        return difference < 604800000 && difference > -86400000;
       });
     }
     setInvoices(newInvoices);
@@ -129,7 +134,7 @@ const InvoiceManager = () => {
                 data-dropdown-toggle="dropdownBgHover"
                 className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-2 py-2 mt-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 flex items-center justify-center cursor-pointer mr-2"
                 type="button"
-                onClick={() => console.log(form)}
+                onClick={() => filterHandler('button')}
               >
                 Filter by{' '}
                 <svg
