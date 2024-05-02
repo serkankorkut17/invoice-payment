@@ -1,12 +1,12 @@
-import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
+import sequelize from '@/utils/sequelize-config';
+import { DataTypes } from 'sequelize';
 
-const userSchema = new Schema({
+const User = sequelize.define('User', {
   user_id: {
-    type: String,
-    required: true,
-    unique: true,
+    type: DataTypes.STRING,
+    allowNull: false,
+    primaryKey: true,
   },
 });
 
-export default mongoose.models?.User || mongoose.model('User', userSchema);
+export default User;

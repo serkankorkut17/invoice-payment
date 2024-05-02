@@ -1,4 +1,4 @@
-import connectDatabase from '@/utils/database';
+import { connectDatabase } from '@/utils/sequelize-config';
 import Invoice from '@/models/invoice';
 import PDFDocument from 'pdfkit';
 import { Readable } from 'stream';
@@ -9,7 +9,12 @@ export default async function handler(req, res) {
     //* GET METHOD *//
     if (req.method === 'GET') {
       const { userId, billId } = req.query;
-      const payment = await Invoice.findOne({ user_id: userId, _id: billId });
+      const payment = await Invoice.findOne({
+        where: {
+          user_id: userId,
+          invoice_id: billId,
+        },
+      });
 
       const doc = new PDFDocument();
       const stream = doc.pipe(new Readable().wrap(res));
@@ -21,7 +26,7 @@ export default async function handler(req, res) {
       doc.fontSize(20);
       doc.text(`Invoice Type: ${payment.bill_type.toString()}`);
       doc.moveDown();
-      doc.text(`Invoice ID: ${payment._id.toString()}`);
+      doc.text(`Invoice ID: ${payment.invoice_id.toString()}`);
       doc.moveDown();
       doc.text(`User ID: ${payment.user_id.toString()}`);
       doc.moveDown();

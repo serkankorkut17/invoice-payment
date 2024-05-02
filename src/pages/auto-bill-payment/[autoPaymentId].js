@@ -30,7 +30,7 @@ const ManageAutoBillPayment = () => {
         .then(data => {
           //console.log(data);
           const autoPayment = data.autoPayments.find(
-            autoPayment => autoPayment._id === autoPaymentId
+            autoPayment => autoPayment.autopay_id === autoPaymentId
           );
           setBillType(
             autoPayment.bill_type.charAt(0).toUpperCase() +
@@ -42,7 +42,7 @@ const ManageAutoBillPayment = () => {
           );
           setPaymentMethod(autoPayment.payment_method);
           setPaymentAmount(autoPayment.payment_amount);
-          setAutoPayId(autoPayment._id);
+          setAutoPayId(autoPayment.autopay_id);
           setForm({
             frequency: autoPayment.frequency,
             paymentMethod: autoPayment.payment_method,
@@ -91,7 +91,7 @@ const ManageAutoBillPayment = () => {
         .then(data => {
           //console.log(data);
           const autoPayment = data.autoPayments.find(
-            autoPayment => autoPayment._id === autoPaymentId
+            autoPayment => autoPayment.autopay_id === autoPaymentId
           );
           setBillType(
             autoPayment.bill_type.charAt(0).toUpperCase() +
@@ -103,7 +103,7 @@ const ManageAutoBillPayment = () => {
           );
           setPaymentMethod(autoPayment.payment_method);
           setPaymentAmount(autoPayment.payment_amount);
-          setAutoPayId(autoPayment._id);
+          setAutoPayId(autoPayment.autopay_id);
           setForm({
             frequency: autoPayment.frequency,
             paymentMethod: autoPayment.payment_method,

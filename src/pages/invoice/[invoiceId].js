@@ -30,7 +30,7 @@ const InvoiceDetails = () => {
             data.bill.bill_type.charAt(0).toUpperCase() +
               data.bill.bill_type.slice(1)
           );
-          setInvoiceNumber(data.bill._id.toString());
+          setInvoiceNumber(data.bill.invoice_id.toString());
           setPaymentAmount(data.bill.bill_amount);
           setDueDate(data.bill.due_date.split("T")[0]);
           setPaymentStatus(data.bill.payment_status === "Paid" ? true : false);
@@ -77,7 +77,7 @@ const InvoiceDetails = () => {
             data.bill.bill_type.charAt(0).toUpperCase() +
               data.bill.bill_type.slice(1)
           );
-          setInvoiceNumber(data.bill._id.toString());
+          setInvoiceNumber(data.bill.invoice_id.toString());
           setPaymentAmount(data.bill.bill_amount);
           setDueDate(data.bill.due_date.split("T")[0]);
           setPaymentStatus(data.bill.payment_status === "Paid" ? true : false);

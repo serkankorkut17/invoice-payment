@@ -5,7 +5,7 @@ const PaymentCard = props => {
   const [loading, setLoading] = useState(false);
 
   const invoiceType = props.payment.bill_type.charAt(0).toUpperCase() + props.payment.bill_type.slice(1);
-  const invoiceNumber = props.payment._id.toString();
+  const invoiceNumber = props.payment.invoice_id.toString();
   const paymentAmount = props.payment.bill_amount;
   const paymentStatus = props.payment.payment_status === 'Paid' ? true : false;
   const dueDate = props.payment.due_date.split('T')[0];
@@ -13,7 +13,7 @@ const PaymentCard = props => {
 
   const requestHandler = async () => {
     setLoading(true);
-    const response = await fetch(`/api/user/${props.payment.user_id}/payments/${props.payment._id}`);
+    const response = await fetch(`/api/user/${props.payment.user_id}/payments/${props.payment.invoice_id}`);
     const blob = await response.blob();
     // const url = window.URL.createObjectURL(new Blob([blob]));
     const url = window.URL.createObjectURL(blob);

@@ -1,5 +1,4 @@
-import mongoose from 'mongoose';
-import connectDatabase from '@/utils/database';
+import { connectDatabase } from '@/utils/sequelize-config';
 import Invoice from '@/models/invoice';
 
 
@@ -10,7 +9,11 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
       const { userId } = req.query;
 
-      const bills = await Invoice.find({ user_id: userId });
+      const bills = await Invoice.findAll({
+        where: {
+          user_id: userId,
+        },
+      });
       res.status(200).json({ bills });
     }
     //* POST METHOD *//
@@ -26,11 +29,9 @@ export default async function handler(req, res) {
         res.status(400).json({ message: 'Bill amount must be a number' });
         return;
       }
-
       const newInvoice = new Invoice({ user_id, bill_type, bill_amount, due_date, payment_status });
-
       await newInvoice.save();
-      const invoiceId = newInvoice._id.toString();
+      const invoiceId = newInvoice.invoice_id.toString();
 
       res.status(201).json({ message: 'Invoice created', newInvoice, billID: invoiceId });
     }

@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 const InvoiceCard = props => {
   const invoiceType = props.invoice.bill_type.charAt(0).toUpperCase() + props.invoice.bill_type.slice(1);
-  const invoiceNumber = props.invoice._id.toString();
+  const invoiceNumber = props.invoice.invoice_id.toString();
   const paymentAmount = props.invoice.bill_amount;
   const dueDate = props.invoice.due_date.split('T')[0];
   const paymentStatus = props.invoice.payment_status === 'Paid' ? true : false;

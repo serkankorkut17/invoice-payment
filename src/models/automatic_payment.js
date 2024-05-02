@@ -1,32 +1,35 @@
-import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
+import sequelize from '@/utils/sequelize-config';
+import { DataTypes } from 'sequelize';
 
-const userSchema = new Schema({
-  // autopay_id: {
-  //   type: Number,
-  //   required: true,
-  //   unique: true,
-  // },
+const AutomaticPayment = sequelize.define('AutomaticPayment', {
+  autopay_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   user_id: {
-    type: String,
-    required: true,
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   bill_type: {
-    type: String,
-    required: true,
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   payment_amount: {
-    type: Number,
-    required: true,
+    type: DataTypes.DECIMAL,
+    allowNull: false,
   },
   payment_method: {
-    type: String,
-    required: true,
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   frequency: {
-    type: String,
-    required: true,
+    type: DataTypes.STRING,
+    allowNull: false,
   },
 });
 
-export default mongoose.models.AutomaticPayment || mongoose.model('AutomaticPayment', userSchema);
+AutomaticPayment.belongsTo(User, { foreignKey: 'user_id' });
+
+export default AutomaticPayment;

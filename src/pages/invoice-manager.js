@@ -298,7 +298,7 @@ const InvoiceManager = () => {
           </div>
           {invoices &&
             invoices.map(invoice => (
-              <InvoiceCard key={invoice._id} invoice={invoice} />
+              <InvoiceCard key={invoice.invoice_id} invoice={invoice} />
             ))}
           {invoices.length === 0 && (
             <div className="flex flex-col items-center justify-center p-4 md:p-5 w-auto lg:w-2/5">

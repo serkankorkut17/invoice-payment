@@ -1,5 +1,4 @@
-import mongoose from 'mongoose';
-import connectDatabase from '@/utils/database';
+import { connectDatabase } from '@/utils/sequelize-config';
 import Invoice from '@/models/invoice';
 
 export default async function handler(req, res) {
@@ -8,7 +7,12 @@ export default async function handler(req, res) {
     //* GET METHOD *//
     if (req.method === 'GET') {
       const { userId } = req.query;
-      const payments = await Invoice.find({ user_id: userId, payment_status: 'Paid'});
+      const payments = await Invoice.findAll({
+        where: {
+          user_id: userId,
+          payment_status: 'Paid',
+        },
+      });
       res.status(200).json({ payments });
     }
     //* POST METHOD *//
@@ -16,7 +20,9 @@ export default async function handler(req, res) {
       const { bill_id, payment_amount, payment_method } = req.body;
 
       const invoice = await Invoice.findOne({
-        _id: bill_id,
+        where: {
+          invoice_id: bill_id,
+        },
       });
 
       if (!invoice) {

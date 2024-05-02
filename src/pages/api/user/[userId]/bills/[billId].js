@@ -1,5 +1,4 @@
-import mongoose from 'mongoose';
-import connectDatabase from '@/utils/database';
+import { connectDatabase } from '@/utils/sequelize-config';
 import Invoice from '@/models/invoice';
 
 export default async function handler(req, res) {
@@ -10,8 +9,10 @@ export default async function handler(req, res) {
       // get specific user's specific bill
       const { userId, billId } = req.query;
       const bill = await Invoice.findOne({
-        user_id: userId,
-        _id: billId,
+        where: {
+          user_id: userId,
+          invoice_id: billId,
+        },
       });
       if (!bill) {
         res.status(404).json({ message: 'Bill not found' });
@@ -31,8 +32,10 @@ export default async function handler(req, res) {
       }
 
       const bill = await Invoice.findOne({
-        user_id: userId,
-        _id: billId,
+        where: {
+          user_id: userId,
+          invoice_id: billId,
+        },
       });
       if (!bill) {
         res.status(404).json({ message: 'Bill not found' });

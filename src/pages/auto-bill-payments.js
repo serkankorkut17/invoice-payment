@@ -167,7 +167,7 @@ const AutoBillPayments = () => {
           {autoPayments &&
             autoPayments.map(autoPayment => (
               <AutoBillCard
-                key={autoPayment._id}
+                key={autoPayment.autopay_id}
                 autoPayment={autoPayment}
                 setAutoPayments={setAutoPayments}
                 user={user}

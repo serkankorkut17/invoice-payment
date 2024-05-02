@@ -1,5 +1,4 @@
-import mongoose from 'mongoose';
-import connectDatabase from '@/utils/database';
+import { connectDatabase } from '@/utils/sequelize-config';
 import User from '@/models/user';
 
 export default async function handler(req, res) {
@@ -8,7 +7,7 @@ export default async function handler(req, res) {
     //* GET METHOD *//
     if (req.method === 'GET') {
       //find all users
-      const users = await User.find();
+      const users = await User.findAll();
       res.status(200).json({ users });
     }
     //* POST METHOD *//

@@ -30,7 +30,7 @@ const PaymentHistory = () => {
         <div className="flex flex-col p-4 md:p-5 w-auto lg:w-2/5">
           {payments &&
             payments.map(payment => (
-              <PaymentCard key={payment._id} payment={payment} />
+              <PaymentCard key={payment.invoice_id} payment={payment} />
             ))}
           {payments.length === 0 && (
             <div className="flex flex-col items-center justify-center p-4 md:p-5 w-auto lg:w-2/5">

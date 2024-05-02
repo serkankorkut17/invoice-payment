@@ -23,7 +23,7 @@ const AutoBillCard = props => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ autoPayId: props.autoPayment._id }),
+      body: JSON.stringify({ autoPayId: props.autoPayment.autopay_id }),
     });
     const {message} = await response.json();
     if (message === 'Automatic Payment deleted') {
