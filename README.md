@@ -1,6 +1,6 @@
 # **Bank App**
 # **Invoice Payment**  
 
-install dependencies: npm i
+npm i
 <br>
-run: npm run dev
+npm run dev
