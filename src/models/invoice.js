@@ -1,5 +1,6 @@
 import sequelize from "@/utils/sequelize-config";
 import { DataTypes } from "sequelize";
+import User from "./user";
 
 const Invoice = sequelize.define(
   "Invoice",
@@ -36,6 +37,7 @@ const Invoice = sequelize.define(
   }
 );
 
-Invoice.belongsTo(User, { foreignKey: "user_id" });
+Invoice.belongsTo(User, { foreignKey: "user_id", foreignKeyConstraint: true });
+
 
 export default Invoice;

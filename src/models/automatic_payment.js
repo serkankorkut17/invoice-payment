@@ -1,5 +1,6 @@
 import sequelize from '@/utils/sequelize-config';
 import { DataTypes } from 'sequelize';
+import User from './user';
 
 const AutomaticPayment = sequelize.define('AutomaticPayment', {
   autopay_id: {
@@ -30,6 +31,6 @@ const AutomaticPayment = sequelize.define('AutomaticPayment', {
   },
 });
 
-AutomaticPayment.belongsTo(User, { foreignKey: 'user_id' });
+AutomaticPayment.belongsTo(User, { foreignKey: "user_id", foreignKeyConstraint: true });
 
 export default AutomaticPayment;

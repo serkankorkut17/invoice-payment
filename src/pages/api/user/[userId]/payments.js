@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     }
     //* POST METHOD *//
     if (req.method === 'POST') {
-      const { bill_id, payment_amount, payment_method } = req.body;
+      let { bill_id, payment_amount, payment_method } = req.body;
 
       const invoice = await Invoice.findOne({
         where: {
@@ -32,7 +32,8 @@ export default async function handler(req, res) {
       if (isNaN(payment_amount)) {
         res.status(400).json({ message: 'Payment amount must be a number' });
         return;
-      } 
+      }
+      payment_amount = Number(payment_amount);
 
       if (invoice.payment_status === 'Paid') {
         res.status(400).json({ message: 'Bill already paid' });
@@ -52,7 +53,7 @@ export default async function handler(req, res) {
           .status(201)
           .json({
             message: 'Payment successful',
-            invoiceId: invoice._id.toString(),
+            invoiceId: invoice.invoice_id.toString(),
           });
       }
     }

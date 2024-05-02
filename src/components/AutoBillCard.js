@@ -14,7 +14,7 @@ const AutoBillCard = props => {
   const paymentAmount = props.autoPayment.payment_amount;
 
   const editAutoPaymentHandler = () => {
-    router.push(`/auto-bill-payment/${props.autoPayment._id}`);
+    router.push(`/auto-bill-payment/${props.autoPayment.autopay_id}`);
   };
 
   const deleteAutoPaymentHandler = async () => {

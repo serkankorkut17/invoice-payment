@@ -99,7 +99,6 @@ const InvoiceManager = () => {
 
   useEffect(() => {
     let newInvoices = [...unsortedInvoices];
-    console.log("unpaid", form.unpaid, "dueSoon", form.dueSoon);
     if (form.unpaid) {
       newInvoices = newInvoices.filter(
         invoice => invoice.payment_status !== 'Paid'

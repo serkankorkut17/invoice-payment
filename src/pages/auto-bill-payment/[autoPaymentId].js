@@ -28,9 +28,9 @@ const ManageAutoBillPayment = () => {
       fetch(`/api/user/${user}/automatic-payments`)
         .then(data => data.json())
         .then(data => {
-          //console.log(data);
+          // console.log(data);
           const autoPayment = data.autoPayments.find(
-            autoPayment => autoPayment.autopay_id === autoPaymentId
+            autoPayment => autoPayment.autopay_id.toString() === autoPaymentId
           );
           setBillType(
             autoPayment.bill_type.charAt(0).toUpperCase() +
@@ -91,7 +91,7 @@ const ManageAutoBillPayment = () => {
         .then(data => {
           //console.log(data);
           const autoPayment = data.autoPayments.find(
-            autoPayment => autoPayment.autopay_id === autoPaymentId
+            autoPayment => autoPayment.autopay_id.toString() === autoPaymentId
           );
           setBillType(
             autoPayment.bill_type.charAt(0).toUpperCase() +
@@ -128,7 +128,6 @@ const ManageAutoBillPayment = () => {
       },
       body: JSON.stringify({ autoPayId: autoPayId }),
     });
-    console.log(response);
     const { message } = await response.json();
     console.log(message);
     if (message === 'Automatic Payment deleted') {

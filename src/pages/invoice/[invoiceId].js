@@ -48,7 +48,8 @@ const InvoiceDetails = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { amount, method } = form;
+    let { amount, method } = form;
+
     if (amount === "" || method === "" || invoiceNumber === "") {
       alert("Please fill in all fields");
       return;

@@ -15,14 +15,15 @@ const AutoBillPayments = () => {
   });
 
   useEffect(() => {
+    if (!user) return;
     fetch(`/api/user/${user}/automatic-payments`)
       .then(data => data.json())
       .then(data => {
-        //console.log(data);
+        // console.log(data);
         setAutoPayments(data.autoPayments);
         setLoading(false);
       });
-  }, []);
+  }, [user]);
 
   const handleFormFieldChange = (fieldName, e) => {
     setForm({ ...form, [fieldName]: e.target.value });

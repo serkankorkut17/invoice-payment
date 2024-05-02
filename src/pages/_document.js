@@ -4,11 +4,11 @@ import 'flowbite';
 export default function Document() {
   return (
     <Html lang="en" class="">
-      <Head></Head>
+      <Head />
       <body>
         <Main />
         <NextScript />
-        <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+        {/* <script src="node_modules/flowbite/dist/flowbite.min.js"></script> */}
       </body>
     </Html>
   );

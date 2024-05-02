@@ -1,60 +1,66 @@
-import Layout from '@/components/Layout';
-import { useEffect, useState } from 'react';
-import Modal from '@/components/Modal';
-import { useUserContext } from '@/context/User';
+import Layout from "@/components/Layout";
+import { useEffect, useState } from "react";
+import Modal from "@/components/Modal";
+import { useUserContext } from "@/context/User";
 
 export default function Home(props) {
   const [users, setUsers] = useState([]);
   const { user, login } = useUserContext();
   const [openModal, setOpenModal] = useState(false);
   const [form, setForm] = useState({
-    amount: '',
-    dueDate: '',
-    invoiceType: '',
-    recipient: '',
-    activeUser: '',
+    amount: "",
+    dueDate: "",
+    invoiceType: "electricity",
+    recipient: "",
+    activeUser: "",
   });
 
   useEffect(() => {
-    fetch('/api/users')
-      .then(data => data.json())
-      .then(data => {
-        //console.log(data);
+    fetch("/api/users")
+      .then((data) => data.json())
+      .then((data) => {
+        // console.log(data);
         setUsers(data.users);
-        setForm({ ...form, recipient: data.users[0].user_id, invoiceType: 'electricity' });
-        //setForm({ ...form, activeUser: data.users[0].user_id});
+        setForm({
+          ...form,
+          recipient: data.users[0].user_id,
+          activeUser: user ? user : data.users[0].user_id,
+        });
       });
-  }, []);
+  }, [user]);
 
   const handleFormFieldChange = (fieldName, e) => {
     setForm({ ...form, [fieldName]: e.target.value });
     console.log(form);
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const today = new Date().toISOString().split('T')[0];
-    const difference = new Date(form.dueDate).getTime() - new Date(today).getTime();
+    console.log(form);
+
+    const today = new Date().toISOString().split("T")[0];
+    const difference =
+      new Date(form.dueDate).getTime() - new Date(today).getTime();
     const { amount, dueDate, invoiceType, recipient } = form;
 
     if (
-      amount === '' ||
-      dueDate === '' ||
-      invoiceType === '' ||
-      recipient === ''
+      amount === "" ||
+      dueDate === "" ||
+      invoiceType === "" ||
+      recipient === ""
     ) {
-      alert('Please fill in all fields');
+      alert("Please fill in all fields");
       return;
     }
     if (difference < 0) {
-      alert('Due date must be in the future');
+      alert("Due date must be in the future");
       return;
     }
 
     //fetch api/user/:userId/bills
     const response = await fetch(`/api/user/${recipient}/bills`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         bill_type: invoiceType,
         bill_amount: amount,
@@ -64,9 +70,9 @@ export default function Home(props) {
 
     const { message, newInvoice, billID } = await response.json();
 
-    if (message === 'Invoice created') {
-      alert('Invoice created');
-      setForm({ ...form, amount: ''});
+    if (message === "Invoice created") {
+      alert("Invoice created");
+      setForm({ ...form, amount: "" });
       console.log(message, newInvoice, billID);
     } else {
       alert(message);
@@ -97,7 +103,7 @@ export default function Home(props) {
               </label>
               <input
                 type="number"
-                onChange={e => handleFormFieldChange('amount', e)}
+                onChange={(e) => handleFormFieldChange("amount", e)}
                 value={form.amount}
                 id="amount"
                 name="amount"
@@ -110,7 +116,7 @@ export default function Home(props) {
               </label>
               <input
                 type="date"
-                onChange={e => handleFormFieldChange('dueDate', e)}
+                onChange={(e) => handleFormFieldChange("dueDate", e)}
                 value={form.dueDate}
                 id="dueDate"
                 name="dueDate"
@@ -123,7 +129,7 @@ export default function Home(props) {
               </label>
               <select
                 id="invoiceType"
-                onChange={e => handleFormFieldChange('invoiceType', e)}
+                onChange={(e) => handleFormFieldChange("invoiceType", e)}
                 value={form.invoiceType}
                 name="invoiceType"
                 className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
@@ -145,16 +151,17 @@ export default function Home(props) {
               </label>
               <select
                 id="recipient"
-                onChange={e => handleFormFieldChange('recipient', e)}
+                onChange={(e) => handleFormFieldChange("recipient", e)}
                 value={form.recipient}
                 name="recipient"
                 className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
               >
-                {users.map(user => (
+                {users.map((user) => (
                   <option key={user.user_id} value={user.user_id}>
                     {user.user_id}
                   </option>
                 ))}
+                {/* {users.length === 0 && <option value="">No Recipients</option>} */}
               </select>
               <button
                 type="button"
@@ -183,16 +190,18 @@ export default function Home(props) {
               </label>
               <select
                 id="activeUser"
-                onChange={e => handleFormFieldChange('activeUser', e)}
-                value={form.activeUser ? form.activeUser : user ? user : ''}
+                onChange={(e) => handleFormFieldChange("activeUser", e)}
+                value={form.activeUser ? form.activeUser : user ? user : ""}
                 name="activeUser"
                 className="p-2 border border-gray-200 rounded-sm mt-2 shadow-md"
               >
-                {users.map(user => (
-                  <option key={user.user_id} value={user.user_id}>
-                    {user.user_id}
-                  </option>
-                ))}
+                {users &&
+                  users.map((user) => (
+                    <option key={user.user_id} value={user.user_id}>
+                      {user.user_id}
+                    </option>
+                  ))}
+                {/* {users === 0 && <option value="">No Users</option>} */}
               </select>
               <button
                 type="button"
