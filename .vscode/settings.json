@@ -1,0 +1,11 @@
+{
+    "sqltools.useNodeRuntime": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "database": "${workspaceFolder:invoice-payment}/src/utils/mydatabase.sqlite",
+            "name": "mydatabase"
+        }
+    ]
+}

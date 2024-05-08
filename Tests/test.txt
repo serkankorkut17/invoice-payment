@@ -1,0 +1,19 @@
+1 add recepient
+
+2 send invoice 
+
+3 request reciept
+
+4 new auto bill
+
+5 bill order delete
+
+6 reciept pay options
+
+7 sort orders
+
+8 filter orders
+
+9 are hearder buttons working
+
+10 update bill
