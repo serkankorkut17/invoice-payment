@@ -69,6 +69,8 @@ try:
 
     else:
         print("User not found in the database.")
+        print(" ")    
+
         print(colored("Test of adding new recipient completed unsuccessfully","red"))
 
 

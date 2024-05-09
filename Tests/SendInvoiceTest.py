@@ -71,13 +71,16 @@ try:
     if alert.text == "Invoice created":
         print("")
         print(colored("Invoice sent successfully", "green"))
-        print("")
+        print(" ")    
+        print(colored("Test of sending invoice completed successfully","green"))
+        print(" ")    
 
 
     else:
         print("")
         print(colored("Invoice not sent", "red"))
         print("")
+        print(colored("Test of sending invoice failed","red"))
 
 
 

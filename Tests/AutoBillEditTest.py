@@ -48,7 +48,7 @@ wait = WebDriverWait(driver, 20)
 try:
     user_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="activeUser"]')))
     select_user = Select(user_element)
-    select_user.select_by_value("Aimen")
+    select_user.select_by_value("serkan")
 
     button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="__next"]/main/form/div[7]/div/button')))
     button.click()
@@ -58,46 +58,82 @@ try:
 
     wait.until(EC.url_to_be('http://localhost:3000/auto-bill-payments'))
 
+    bill_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="__next"]/main/div/div[2]')))
 
-    bill_type_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="billType"]')))
-    select_bill_type = Select(bill_type_element)
-    select_bill_type.select_by_value("internet")
+    edit_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="__next"]/main/div/div[2]/div[5]/button[1]')))
+    edit_button.click()
 
+    time.sleep(2)
 
     frequency_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="frequency"]')))
     select_frequency = Select(frequency_element)
-    select_frequency.select_by_value("annually")
+    print(frequency_element.get_attribute("value"))
 
+    def selectNewFrequency():
+
+        oldFrequency =   frequency_element.get_attribute("value")
+
+        if oldFrequency == "monthly":
+            newFrequency = select_frequency.select_by_value("annually")
+
+        else:
+            newFrequency = select_frequency.select_by_value("monthly")
+
+        return newFrequency
+    
+    selectNewFrequency()
+
+    frequency_element.get_attribute("value")
+    
     payment_method_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="paymentMethod"]')))
     select_payment_method = Select(payment_method_element)
-    select_payment_method.select_by_value("Paycell")
+
+    def selectNewPaymentMethod():
+
+        oldPaymentMethod =   payment_method_element.get_attribute("value")
+
+        if oldPaymentMethod == "Paycell":
+            newPaymentMethod = select_payment_method.select_by_value("Credit/Debit Card")
+
+        else:
+            newPaymentMethod = select_payment_method.select_by_value("Paycell")
+
+        return newPaymentMethod
+
+    selectNewPaymentMethod()
+
 
     amount_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="paymentAmount"]')))
-    amount_element.send_keys("1000")
+    amount = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="__next"]/main/div/div[2]/div[2]/p[2]')))
 
+    amount_txt = amount.text[:-1]
+    newAmount= int(amount_txt) + 1111
 
-    # Click the send button
-    send_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="__next"]/main/form/div[2]/div[5]/button')))
-    send_button.click()
+    amount_element.clear()
+    amount_element.send_keys(newAmount)
+
+    time.sleep(5)
+
+    confirm_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="__next"]/main/form/div[2]/div[4]/button[1]')))
+    confirm_button.click()
 
     alert = wait.until(EC.alert_is_present())
 
     print("")
 
-    print(alert.text)
-
-    if alert.text == "Automatic Payment created":
+    if alert.text == "Automatic Payment updated":
         print("")
-        print(colored("Automatic bill sent successfully", "green"))
+        print(colored("Automatic bill updated successfully", "green"))
         print(" ")    
-        print(colored("Test of adding new automatic bill completed successfully","green"))
-        print(" ")    
+        print(colored("Test of editing automatic bill payment completed successfully","green"))
+        print(" ")   
+
 
     else:
         print("")
-        print(colored("Automatic bill not sent", "red"))
+        print(colored("Automatic bill did not update", "red"))
         print("")
-        print(colored("Test of adding new automatic bill failed","red"))
+        print("Test of editing automatic bill payment completed unsuccessfully")
 
 
 
@@ -106,5 +142,5 @@ try:
 
 
 finally:
-    time.sleep(2)
+    time.sleep(10)
     driver.quit()

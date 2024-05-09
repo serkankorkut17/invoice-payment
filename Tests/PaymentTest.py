@@ -10,6 +10,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -93,7 +94,7 @@ try:
 
     else:
         print("")
-        print(colored("Test of payment function was completed usuccessfully", "red"))
+        print(colored("Test of payment function failed", "red"))
         print(alerttxt)
         print("")
 

@@ -59,26 +59,10 @@ try:
     wait.until(EC.url_to_be('http://localhost:3000/auto-bill-payments'))
 
 
-    bill_type_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="billType"]')))
-    select_bill_type = Select(bill_type_element)
-    select_bill_type.select_by_value("internet")
+    bill_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="__next"]/main/div/div[2]')))
 
-
-    frequency_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="frequency"]')))
-    select_frequency = Select(frequency_element)
-    select_frequency.select_by_value("annually")
-
-    payment_method_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="paymentMethod"]')))
-    select_payment_method = Select(payment_method_element)
-    select_payment_method.select_by_value("Paycell")
-
-    amount_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="paymentAmount"]')))
-    amount_element.send_keys("1000")
-
-
-    # Click the send button
-    send_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="__next"]/main/form/div[2]/div[5]/button')))
-    send_button.click()
+    delete_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="__next"]/main/div/div[2]/div[5]/button[2]')))
+    delete_button.click()
 
     alert = wait.until(EC.alert_is_present())
 
@@ -86,18 +70,19 @@ try:
 
     print(alert.text)
 
-    if alert.text == "Automatic Payment created":
+    if alert.text == "Automatic Payment deleted":
         print("")
-        print(colored("Automatic bill sent successfully", "green"))
+        print(colored("Automatic bill deleted successfully", "green"))
         print(" ")    
-        print(colored("Test of adding new automatic bill completed successfully","green"))
-        print(" ")    
+        print(colored("Test of deleting automatic bill completed successfully","green"))
+        print(" ")   
+
 
     else:
         print("")
-        print(colored("Automatic bill not sent", "red"))
+        print(colored("Automatic bill not deleted", "red"))
         print("")
-        print(colored("Test of adding new automatic bill failed","red"))
+        print(colored("Test of deleting automatic bill failed","red"))
 
 
 
