@@ -45,8 +45,9 @@ driver.get(loginurl)
 wait = WebDriverWait(driver, 20)
 
 try:
-    user = wait.until(EC.element_to_be_clickable((By.ID, 'activeUser')))
-    user.find_element(By.XPATH,'//*[@id="activeUser"]/option[1]').click()
+    user_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="activeUser"]')))
+    select_user = Select(user_element)
+    select_user.select_by_value("Aimen")
 
     button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="__next"]/main/form/div[7]/div/button')))
     button.click()
