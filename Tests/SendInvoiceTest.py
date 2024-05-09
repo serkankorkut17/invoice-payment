@@ -38,18 +38,18 @@ def verify_user_in_db(username):
         print(f"Database error: {e}")
         return False
 
-loginurl = "http://localhost:3001/"
+loginurl = "http://localhost:3000/"
 driver.get(loginurl)
 
 # Increase the timeout to 20 seconds
 wait = WebDriverWait(driver, 20)
 
 try:
-    username_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="amount"]')))
-    username_element.send_keys("2530.50")
+    amount_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="amount"]')))
+    amount_element.send_keys("2530.50")
 
-    password_element = wait.until(EC.presence_of_element_located((By.NAME, 'dueDate')))
-    password_element.send_keys("06/06/2024")
+    date_element = wait.until(EC.presence_of_element_located((By.NAME, 'dueDate')))
+    date_element.send_keys("06/06/2024")
 
     category = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="invoiceType"]')))
     category.find_element(By.XPATH,'//*[@id="invoiceType"]/option[3]').click()

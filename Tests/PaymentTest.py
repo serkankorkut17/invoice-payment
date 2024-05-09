@@ -38,7 +38,7 @@ def verify_user_in_db(username):
         print(f"Database error: {e}")
         return False
 
-loginurl = "http://localhost:3001/"
+loginurl = "http://localhost:3000/"
 driver.get(loginurl)
 
 # Increase the timeout to 20 seconds
@@ -100,6 +100,8 @@ try:
     #wait.until(EC.url_changes(loginurl))
     #print("Login successful")
 
+
+    
 
 finally:
     time.sleep(5)

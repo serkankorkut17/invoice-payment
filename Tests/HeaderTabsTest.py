@@ -78,9 +78,6 @@ try:
     wait.until(EC.url_to_be(loginurl))
     print(colored("Admin tab works!","cyan"))
 
-
-
-
     print(colored("Test of Receipt request function was completed successfully!", "green"))
 
 
