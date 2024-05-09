@@ -16,13 +16,19 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 
 sqlite_db_path="src/utils/mydatabase.sqlite"
 
+
+loginurl = "http://localhost:3001/"
+driver.get(loginurl)
+
+# Increase the timeout to 20 seconds
+wait = WebDriverWait(driver, 20)
+
+
 def verify_user_in_db(username):
     """Connect to the SQLite database and verify the user is present."""
     try:
         conn = sqlite3.connect(sqlite_db_path)
         cursor = conn.cursor()
-
-        # Replace 'Users' with your actual table name
         cursor.execute("SELECT * FROM Users WHERE user_id = ?", (username,))
         user = cursor.fetchone()
         cursor.close()
@@ -34,11 +40,6 @@ def verify_user_in_db(username):
         print(f"Database error: {e}")
         return False
 
-loginurl = "http://localhost:3001/"
-driver.get(loginurl)
-
-# Increase the timeout to 20 seconds
-wait = WebDriverWait(driver, 20)
 
 try:
     # Wait for the "Add New" button using partial link text
@@ -75,5 +76,5 @@ try:
 
 
 finally:
-    time.sleep(2)
+    time.sleep(3)
     driver.quit()

@@ -1,9 +1,11 @@
+
 """
 This code tests the functionality of adding menu items to restaurants of our website
 """
 
 import time
 import sqlite3
+import re
 from termcolor import colored
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -27,6 +29,20 @@ driver.get(loginurl)
 # Increase the timeout to 20 seconds
 wait = WebDriverWait(driver, 20)
 
+
+
+def extract_amount(anchor_text):
+    match = re.search(r'Payment Amount:\s*([\d,.]+)\s*₺', anchor_text)
+    if match:
+        return float(match.group(1).replace(',', ''))
+    return None
+
+
+def is_sorted_descending(anchor_elements):
+    amounts = [extract_amount(anchor.text) for anchor in anchor_elements]
+    print("Extracted amounts:", amounts)
+    return all(earlier >= later for earlier, later in zip(amounts, amounts[1:]))
+
 try:
     user_element = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="activeUser"]')))
     select_user = Select(user_element)
@@ -37,33 +53,30 @@ try:
 
     manager_tab = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="navbar-default"]/ul/li[2]/a')))
     manager_tab.click()
-    
-    wait.until(EC.url_to_be('http://localhost:3000/invoice-manager'))  
-    print(colored("Invoice Manager tab works!","cyan"))
 
-    manager_tab = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="navbar-default"]/ul/li[3]/a')))
-    manager_tab.click()
+    wait.until(EC.url_changes(loginurl))
 
-    wait.until(EC.url_to_be('http://localhost:3000/payment-history'))
-    print(colored("Payment History tab works!","cyan"))
+    sort = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="dropdownBottomButton"]')))
+    sort.click()
 
 
-    manager_tab = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="navbar-default"]/ul/li[4]/a')))
-    manager_tab.click()
 
-    wait.until(EC.url_to_be('http://localhost:3000/auto-bill-payments'))
-    print(colored("Auto Bill Payments tab works!","cyan"))
+    wait.until(EC.element_to_be_clickable((By.XPATH,'//*[@id="dropdownBottom"]/ul/li[4]/button' ))).click()
 
-    manager_tab = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="navbar-default"]/ul/li[1]/a')))
-    manager_tab.click()
-
-    wait.until(EC.url_to_be(loginurl))
-    print(colored("Admin tab works!","cyan"))
+    anchor_elements = driver.find_elements(By.XPATH, '//*[@id="__next"]/main/div/a')
 
 
-    print(" ")    
-    print(colored("Test of Header tabs completed successfully","green"))
-    print(" ")    
+    if is_sorted_descending(anchor_elements):
+        print("")
+        print("The invoices are sorted in descending order by amount.")
+        print("")
+        print(colored("Test of Sorting function was completed successfully!", "green"))
+        print("")
+    else:
+        print("The invoices are NOT sorted in descending order by amount.")
+        print("")
+        print(colored("Test of Sorting function failed!", "red"))
+
 
 finally:
     time.sleep(3)

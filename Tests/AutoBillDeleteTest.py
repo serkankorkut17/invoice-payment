@@ -21,24 +21,6 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 
 sqlite_db_path="src/utils/mydatabase.sqlite"
 
-def verify_user_in_db(username):
-    """Connect to the SQLite database and verify the user is present."""
-    try:
-        conn = sqlite3.connect(sqlite_db_path)
-        cursor = conn.cursor()
-
-        # Replace 'Users' with your actual table name
-        cursor.execute("SELECT * FROM Users WHERE user_id = ?", (username,))
-        user = cursor.fetchone()
-        cursor.close()
-        conn.close()
-
-        return user 
-
-    except Exception as e:
-        print(f"Database error: {e}")
-        return False
-
 loginurl = "http://localhost:3000/"
 driver.get(loginurl)
 
@@ -91,5 +73,5 @@ try:
 
 
 finally:
-    time.sleep(2)
+    time.sleep(3)
     driver.quit()
